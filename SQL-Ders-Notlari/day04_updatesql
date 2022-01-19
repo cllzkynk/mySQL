@@ -1,0 +1,92 @@
+    CREATE TABLE  tedarikciler
+        (
+        vergi_no NUMBER(3),
+        firma_ismi VARCHAR2(50),
+        irtibat_ismi VARCHAR2(50),
+        CONSTRAINT pk_ted PRIMARY KEY (vergi_no)
+    );
+        INSERT INTO tedarikciler VALUES (101, 'IBM','Kim Yon');
+        INSERT INTO tedarikciler VALUES (102, 'Huawei','Çin Li');
+        INSERT INTO tedarikciler VALUES (103, 'Erikson','Maki Tammamen');
+        INSERT INTO tedarikciler VALUES (104, 'Apple','Adam Eve');
+    
+    
+    CREATE TABLE ürünler
+    (
+        ted_vergino NUMBER(3), 
+        ürün_id NUMBER(11), 
+        ürün_ismi VARCHAR2(50), 
+        müsteri_ismi VARCHAR2(50),
+        CONSTRAINT fk_ürünler FOREIGN KEY(ted_vergino) REFERENCES tedarikciler(vergi_no)
+        );
+        
+        INSERT INTO ürünler VALUES(101, 1001,'Laptop', 'Ayse Can');
+        INSERT INTO ürünler VALUES(102, 1002,'Phone', 'Fatma Aka');
+        INSERT INTO ürünler VALUES(102, 1003,'TV', 'Ramazan Öz');
+        INSERT INTO ürünler VALUES(102, 1004,'Laptop', 'Veli Han');
+        INSERT INTO ürünler VALUES(103, 1005,'Phone', 'Canan Ak');
+        INSERT INTO ürünler VALUES(104, 1006,'TV', 'Ali Bak');
+        INSERT INTO ürünler VALUES(104, 1007, 'Phone', 'Aslan Yilmaz');
+        
+        SELECT * FROM ürünler;
+        SELECT * FROM tedarikciler;
+        
+        -- SYNTAX
+        ---------------
+     --   UPDATE tablo_adi
+     --   SET sütun_adi = yeni deger
+     --   WHERE sütun_adi
+        
+        -- Vergi no'su 101 olan firma_ismini 'LG' olarak güncelleyelim
+        UPDATE tedarikciler
+        SET firma_ismi = 'LG'
+        WHERE vergi_no = 101;
+       
+        --Vergi no'su 102 olan firma_ismini 'Samsung' ve irtibat_ismi'ni 'Ali Veli' olarak güncelleyelim
+        UPDATE tedarikciler
+        SET firma_ismi = 'Samsung', irtibat_ismi = 'Ali Veli'
+        WHERE vergi_no = 102;
+        
+          --firma_ismi 'Samsung' olan tedarikcinin irtibat_ismi'ni 'Ayse Yilmaz' olarak güncelleyelim
+        UPDATE tedarikciler
+        SET irtibat_ismi = 'Ayse Yilmaz'
+        WHERE firma_ismi = 'Samsung';
+        
+        -- ürünler tablosundaki 'Phone' degerlerini Telefon olarak güncelleyelim
+        UPDATE ürünler
+        SET ürün_ismi = 'Telefon'
+        WHERE ürün_ismi = 'Phone';
+        
+        -- ürünler tablosundaki ürün_id degeri 1004'ten büyük olanlarin ürün_id degerlerini bir arttiriniz
+        UPDATE ürünler
+        SET ürün_id = ürün_id+1
+        WHERE ürün_id > 1004;
+        
+        -- ürünler tablosundaki tüm ürünlerin ürün_id degerini ted_vergino sütun degerleri ile toplayarak güncelleyin
+        UPDATE ürünler
+        SET ürün_id = ürün_id + ted_verg?no;
+                
+        -- ürünler tablosundan Ali Bak'in aldigi ürün_ismi'ni, tedarikci tablosunda irtibat_ismi 'Adam Eve' olan firmanin ismi ile degistirelim
+        UPDATE ürünler
+        SET ürün_ismi = (SELECT firma_ismi FROM tedarikciler
+                                      WHERE irtibat_ismi = 'Adam Eve')
+        WHERE müsteri_ismi = 'Ali Bak';
+        
+        -- Laptop satin alan müsterilerin ismini, Apple'in irtibat_ismi ile degistirin
+        UPDATE ürünler
+        SET müsteri_ismi = (SELECT irtibat_ismi FROM tedar?kc?ler
+                                           WHERE  firma_ismi = 'Apple')
+        WHERE ürün_ismi = 'Laptop';        
+        
+        SELECT * FROM tedarikciler;
+        SELECT * FROM ürünler;
+        
+        
+        DELETE FROM tedarikciler;
+        DELETE FROM ürünler;
+        
+        
+        
+        
+        
+        

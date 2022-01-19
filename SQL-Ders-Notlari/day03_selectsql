@@ -1,0 +1,214 @@
+CREATE TABLE ögrenciler
+ (
+    id NUMBER(9),
+    isim VARCHAR2(50),
+    adres VARCHAR2(100),
+    sinav_notu NUMBER(3)
+ );
+    
+ INSERT INTO ögrenciler VALUES(123, 'Ali Can', 'Ankara', 75);
+ INSERT INTO ögrenciler VALUES(124, 'Merve Gül', 'Ankara', 85);
+ INSERT INTO ögrenciler VALUES(125, 'Kemal Yasa', 'Istanbul', 85);
+ 
+SELECT * FROM ögrenciler;
+
+-- Notu 80'den büyük olanlarin sadece isim ve not bigisini listeleme
+SELECT isim, sinav_notu 
+FROM ögrenciler 
+WHERE sinav_notu > 80;
+
+
+SELECT * FROM ögrenciler
+WHERE adres = 'Ankara';
+
+SELECT * FROM ögrenciler
+WHERE id = 124;
+
+CREATE TABLE personel
+    (   
+        id CHAR(5),
+        isim VARCHAR2(50),
+        maas NUMBER(5)
+    );
+
+    INSERT INTO personel VALUES('10001', 'Ahmet Aslan', 7000);
+    INSERT INTO personel VALUES( '10002', 'Mehmet Yilmaz' ,12000);
+    INSERT INTO personel VALUES('10003', 'Meryem ', 7215);
+    INSERT INTO personel VALUES('10004', 'Veli Han', 5000);
+    INSERT INTO personel VALUES('10005', 'Mustafa Ali', 5500);
+    INSERT INTO personel VALUES('10005', 'Ayse Can', 4000);
+    
+    /*================= BETWEEN =================*/
+    
+    -- id'si 10002 ve 10005 arasinda olan personelin tüm bilgilerini
+    SELECT * FROM personel
+    WHERE id >= '10002' AND id <= '10005';
+    
+    SELECT id, isim, maas 
+    FROM personel
+    WHERE id BETWEEN '10002' AND '10005';
+    
+    -- Mehmet Yilmaz ile Veli Han arasindaki personel bilgilerini listeleyiniz
+    SELECT * FROM personel
+    WHERE isim BETWEEN 'Mehmet Yilmaz' AND 'Veli Han';
+    
+    -- id'si 10002 ile 10004 arasinda olmayanlari listele
+     SELECT * FROM personel
+    WHERE id NOT BETWEEN '10002' AND '10004';
+    
+     /*===================== IN =====================*/
+     
+     --id'si 10001, 10002, 10004 olanlari listeleyelim OR yöntemiyle
+     SELECT * FROM personel
+     WHERE id = '10001' OR id = '10002' OR id = 10004;
+     
+     -- In yöntemi ile
+     SELECT * FROM personel
+     WHERE id IN( '10001', '10002', '10004');
+    
+    -- maas'i sadece 7000 ile 12000 olan personeli listeleyelim
+    SELECT * FROM personel
+    WHERE maas IN(7000,12000);
+    
+    /*===================== LIKE =====================*/
+    
+    SELECT * FROM personel
+    WHERE isim LIKE 'M%';
+    
+    SELECT * FROM personel
+    WHERE isim LIKE '_______';
+    
+    SELECT * FROM personel
+    WHERE isim LIKE '_e%';
+    
+    SELECT * FROM personel
+    WHERE maas LIKE '%00';
+    
+    SELECT * FROM personel
+    WHERE isim LIKE 'A_____a%';
+    
+    SELECT * FROM personel
+    WHERE isim LIKE '%an%';
+    
+    SELECT * FROM personel
+    WHERE maas NOT LIKE '____';
+    
+    /* ======================= SELECT - REGEXP_LIKE ================================
+    Daha karma??k pattern ile sorgulama i?lemi için REGEXP_LIKE kullan?labilir.  
+    Syntax:
+    --------
+    REGEXP_LIKE(sutun_ad?, ‘pattern[] ‘, ‘c’ ] ) 
+            
+    /* ========================================================================== */
+
+
+    CREATE TABLE kelimeler
+    (
+        id NUMBER(10) UNIQUE,
+        kelime VARCHAR2(50) NOT NULL,
+        harf_sayisi NUMBER(6)
+    );
+
+    INSERT INTO kelimeler VALUES (1001, 'hot', 3);
+    INSERT INTO kelimeler VALUES (1002, 'hat', 3);
+    INSERT INTO kelimeler VALUES (1003, 'hit', 3);
+    INSERT INTO kelimeler VALUES (1004, 'hbt', 3);
+    INSERT INTO kelimeler VALUES (1005, 'hct', 3);
+    INSERT INTO kelimeler VALUES (1006, 'adem', 4);
+    INSERT INTO kelimeler VALUES (1007, 'selim', 5);
+    INSERT INTO kelimeler VALUES (1008, 'yusuf', 5);
+    INSERT INTO kelimeler VALUES (1009, 'hip', 3);
+    INSERT INTO kelimeler VALUES (1010, 'HOT', 3);
+    INSERT INTO kelimeler VALUES (1011, 'hOt', 3);
+    INSERT INTO kelimeler VALUES (1012, 'h9t', 3);
+    INSERT INTO kelimeler VALUES (1013, 'hoot', 4);
+    INSERT INTO kelimeler VALUES (1014, 'haaat', 5);
+    
+    SELECT * FROM kelimeler;
+    DROP TABLE kelimeler;
+
+/* -----------------------------------------------------------------------------
+  ORNEK21: ?çerisinde 'hi' bulunan kelimeleri listeleyeniz
+ -----------------------------------------------------------------------------*/ 
+  SELECT * FROM kelimeler
+  WHERE REGEXP_LIKE (kelime, 'hi');
+  
+  -- icerisinde herhNGI BIR YERDE 'h' veya 'i' veya 'o' gecen kelomeler
+  SELECT * FROM kelimeler
+  WHERE REGEXP_LIKE (kelime, '[hio]');
+  
+  -- icerisinde ot veya at olan kelimeler
+    SELECT * FROM kelimeler
+  WHERE REGEXP_LIKE (kelime, 'ot|at');
+  
+  SELECT * FROM kelimeler
+  WHERE REGEXP_LIKE (kelime, 'ot|at', 'i'); --büyük kücük harf farketmeksizin
+  
+  --hi veya ho ile baslayan kelimeler
+  -- baslamak icin ^ kullanilir
+  SELECT * FROM kelimeler
+  WHERE REGEXP_LIKE (kelime, '^hi|^ho', 'i');
+  
+  --bitis icin $ isareti kullanilir
+  --t veya m ile bitenkelimeleri case sensetive olmadan lsiteleyelim
+  SELECT * FROM kelimeler
+  WHERE REGEXP_LIKE (kelime, 't$|m$', 'i');
+  
+  -- h ile baslayip veya t ile biten 3 harfli kelimeler
+  -- köseli parantez tek bir karakter gösterir
+  SELECT * FROM kelimeler
+  WHERE REGEXP_LIKE (kelime, 'h[a-z0-9]t', 'i');
+  
+  -- ilk harfi h, son harfi t olup 2. harfi a veya i olan 3 harfli kelimeler
+  SELECT * FROM kelimeleR
+  WHERE REGEXP_LIKE (kelime, 'h[ai]t', 'i');
+
+    -- icinde m veya i veya e olan kelimeler
+    SELECT * FROM kelimeler  
+    WHERE REGEXP_LIKE (kelime, '[mie](*)'); -- yildiz hersey demektir
+    
+    --icerisinde en az 2 adet 'o' barindiran kelimeler
+    -- {2}
+    
+  SELECT * FROM kelimeler
+  WHERE REGEXP_LIKE (kelime, '[o]{2}', 'i'); -- {2} en az 2 adet olan demek
+  
+  SELECT * FROM kelimeler
+  WHERE REGEXP_LIKE (kelime, '[a]{2}', 'i');
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 

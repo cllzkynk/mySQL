@@ -1,0 +1,93 @@
+/*
+    NOT NULL - Bir Sütunun  NULL içermemesini garanti eder.
+    UNIQUE - Bir sütundaki tüm de?erlerin BENZERS?Z olmas?n? garanti eder.
+    PRIMARY KEY - Bir sütünün NULL içermemesini ve sütundaki verilerin
+                  BENZERS?Z olmas?n? garanti eder.(NOT NULL ve UNIQUE birle?imi gibi)
+    FOREIGN KEY - Ba?ka bir tablodaki Primary Key’i referans göstermek için kullan?l?r.
+                  Böylelikle, tablolar aras?nda ili?ki kurulmu? olur.
+    CHECK - Bir sutundaki tüm verilerin belirlenen özel bir ?art? sa?lamas?n? garanti eder.
+    DEFAULT - Herhangi bir de?er atanamad???nda Ba?lang?ç de?erinin atanmas?n? sa?lar.
+*/
+    CREATE TABLE calisanlar
+    (
+    id CHAR(5) PRIMARY KEY,
+    isim VARCHAR2(50) NOT NULL  UNIQUE,
+    maas NUMBER(5) NOT NULL,
+    ise_baslama DATE
+    );
+    
+    INSERT INTO calisanlar VALUES('10001', 'Ahmet Aslan',7000, '13-04-2018');
+    INSERT INTO calisanlar VALUES ('1002', 'Mehmet Yilmaz', 12000,'14-04-2018');
+    INSERT INTO calisanlar VALUES ('1003', '', 5000,'14-04-2018');
+    INSERT INTO calisanlar VALUES ('1004', 'Veli Han', 5000,'14 -04-2018');
+    INSERT INTO calisanlar VALUES ('1005', 'Mustafa Ali', 5000,'12-04-2018');
+    INSERT INTO calisanlar VALUES ('1006', 'Canan Yas', NULL,'12-04-2018');
+    
+    
+    SELECT * FROM calisanlar;
+    
+    DROP TABLE calisanlar;
+    
+    -----------------------------------------------------------------------
+    ---- alternatif primary tanimlama yöntemi----
+    
+  CREATE TABLE calisanlar
+    (
+        id CHAR(5), 
+        isim VARCHAR2(50) UNIQUE,
+        maas NUMBER(5) NOT NULL,
+        ise_baslama DATE,
+        CONSTRAINT id_pk PRIMARY KEY(id) 
+    );
+    
+    INSERT INTO calisanlar VALUES('10001', 'Ahmet Aslan',7000, '13-04-2018');
+    INSERT INTO calisanlar VALUES( '10002', 'Mehmet YIlmaz' ,12000, '14-04-18');
+    INSERT INTO calisanlar VALUES('10003', 'CAN', 5000, '14-04-18');
+    
+    DROP TABLE calisanlar;
+    
+    
+    CREATE TABLE adresler
+    (
+        adres_id CHAR(5),            -- REFERENCES calisanlar(id),
+        sokak VARCHAR2(50),
+        cadde VARCHAR2(30),
+        sehir VARCHAR2(15),
+        CONSTRAINT id_fk FOREIGN KEY (adres_id) REFERENCES calisanlar
+    );
+    
+    INSERT INTO adresler VALUES('10001','Mutlu Sok', '40.Cad.','IST');
+    INSERT INTO adresler VALUES('10001','Can Sok', '50.Cad.','Ankara');
+    INSERT INTO adresler VALUES('10002','Aga Sok', '30.Cad.','Antep');
+    INSERT INTO adresler VALUES('','Aga Sok', '30.Cad.','Antep');
+    INSERT INTO adresler VALUES('','Aga Sok', '30.Cad.','Antep');
+     
+    SELECT * FROM adresler;
+    SELECT * FROM calisanlar;
+    
+       DROP TABLE adresler;
+    
+    SELECT * FROM calisanlar, adresler    WHERE id = '10001';
+    
+    CREATE TABLE sehirler(
+        alan_kodu NUMBER(3) DEFAULT 00,
+        isim VARCHAR2(20) DEFAULT 'noname',
+        nufus NUMBER(8) CHECK(nufus>0)
+        );
+        
+        INSERT INTO sehirler VALUES(54, 'Sakarya', 1250000);
+        INSERT INTO sehirler VALUES('', '', 18000000);
+        
+        --- Parcali veri girisi
+        INSERT INTO sehirler (nufus) VALUES(500000);
+        INSERT INTO sehirler (nufus) VALUES(500000);
+        
+        
+        SELECT * FROM sehirler;
+        
+        DROP TABLE sehirler;
+    
+    
+ 
+    
+    
